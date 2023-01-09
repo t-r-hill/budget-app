@@ -9,6 +9,9 @@ public class CreateData extends Database {
     PreparedStatement preparedStatement;
     Connection connection;
     String connectionString;
+    String[] columnNames = {"id"};
+    ResultSet generatedKeys;
+    int result;
 
     public CreateData() {
         try {
@@ -24,17 +27,25 @@ public class CreateData extends Database {
     public int createUser(String first_name, String last_name, String email) {
         connection = null;
         preparedStatement = null;
-        int result = 0;
+        generatedKeys = null;
+        result = 0;
 
         try {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO users" +
                     "(first_name, last_name, email)" +
-                    "VALUES (?, ?, ?);");
+                    "VALUES (?, ?, ?);", columnNames);
             preparedStatement.setString(1, first_name);
             preparedStatement.setString(2, last_name);
             preparedStatement.setString(3, email);
             result = preparedStatement.executeUpdate();
+
+            if (result > 0){
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    result = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println("SQL exception occurred");
             e.printStackTrace();
@@ -53,7 +64,7 @@ public class CreateData extends Database {
     public int createIncome(int user_id, BigDecimal amount, String freq, String date, String source) {
         connection = null;
         preparedStatement = null;
-        int result = 0;
+        result = 0;
 
         try {
             connection = DriverManager.getConnection(connectionString);
@@ -85,7 +96,7 @@ public class CreateData extends Database {
                                  int term_months, String start_date, String payment_date, BigDecimal payment_amount) {
         connection = null;
         preparedStatement = null;
-        int result = 0;
+        result = 0;
 
         try {
             connection = DriverManager.getConnection(connectionString);
@@ -118,7 +129,7 @@ public class CreateData extends Database {
     public int createDebtPayment(int debt_id, BigDecimal amount, String date, BigDecimal current_balance) {
         connection = null;
         preparedStatement = null;
-        int result = 0;
+        result = 0;
 
         try {
             connection = DriverManager.getConnection(connectionString);
@@ -147,7 +158,7 @@ public class CreateData extends Database {
     public int createExpense(int user_id, BigDecimal amount, String freq, String date, String category, String desc) {
         connection = null;
         preparedStatement = null;
-        int result = 0;
+        result = 0;
 
         try {
             connection = DriverManager.getConnection(connectionString);
