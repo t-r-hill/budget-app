@@ -1,31 +1,43 @@
 package Model;
 
+import Data.ReadData;
+
 import java.util.List;
+import java.util.Map;
 
 public class User {
     String firstName;
     String lastName;
     String email;
-    List<Income> incomes;
-    List<Expense> expenses;
-    List<Debt> debts;
-    List<DebtPayment> debtPayments;
+    Map<Integer,Income> incomes;
+    Map<Integer,Expense> expenses;
+    Map<Integer,Debt> debts;
+    int id;
+    ReadData readData;
 
-    public User(String firstName, String lastName, String email) {
+    public User(String firstName, String lastName, String email, int id) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.id = id;
+        readData = new ReadData();
     }
 
     public User() {
     }
 
-    public String getFirst_name() {
+    public void loadObjects(){
+        incomes = readData.readIncomes(id);
+        expenses = readData.readExpenses(id);
+        debts = readData.readDebts(id);
+    }
+
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirst_name(String first_name) {
-        this.firstName = first_name;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
@@ -44,36 +56,36 @@ public class User {
         this.email = email;
     }
 
-    public List<Income> getIncomes() {
+    public Map<Integer,Income> getIncomes() {
         return incomes;
     }
 
-    public void setIncomes(List<Income> incomes) {
+    public void setIncomes(Map<Integer,Income> incomes) {
         this.incomes = incomes;
     }
 
-    public List<Expense> getExpenses() {
+    public Map<Integer,Expense> getExpenses() {
         return expenses;
     }
 
-    public void setExpenses(List<Expense> expenses) {
+    public void setExpenses(Map<Integer,Expense> expenses) {
         this.expenses = expenses;
     }
 
-    public List<Debt> getDebts() {
+    public Map<Integer,Debt> getDebts() {
         return debts;
     }
 
-    public void setDebts(List<Debt> debts) {
+    public void setDebts(Map<Integer,Debt> debts) {
         this.debts = debts;
     }
 
-    public List<DebtPayment> getDebtPayments() {
-        return debtPayments;
+    public int getId() {
+        return id;
     }
 
-    public void setDebtPayments(List<DebtPayment> debtPayments) {
-        this.debtPayments = debtPayments;
+    public void setId(int id) {
+        this.id = id;
     }
 
     @Override

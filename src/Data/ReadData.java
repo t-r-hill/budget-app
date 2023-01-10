@@ -41,7 +41,8 @@ public class ReadData extends Database {
                 User user = new User(
                         resultSet.getString("first_name"),
                         resultSet.getString("last_name"),
-                        resultSet.getString("email")
+                        resultSet.getString("email"),
+                        resultSet.getInt("id")
                 );
                 users.put(
                         resultSet.getInt("id"),
@@ -82,7 +83,8 @@ public class ReadData extends Database {
                         resultSet.getBigDecimal("amount"),
                         resultSet.getString("freq"),
                         resultSet.getString("date"),
-                        resultSet.getString("source")
+                        resultSet.getString("source"),
+                        resultSet.getInt("id")
                 );
                 incomes.put(
                         resultSet.getInt("id"),
@@ -126,10 +128,12 @@ public class ReadData extends Database {
                         resultSet.getString("start_date"),
                         resultSet.getBigDecimal("payment_amount"),
                         resultSet.getString("payment_date"),
-                        resultSet.getInt("is_repaid")
+                        resultSet.getInt("is_repaid"),
+                        resultSet.getInt("id")
                 );
+
                 debts.put(
-                        resultSet.getInt("id"),
+                        debt.getId(),
                         debt
                 );
             }
@@ -144,6 +148,10 @@ public class ReadData extends Database {
                 System.out.println("Exception occurred - couldn't close connection");
                 e.printStackTrace();
             }
+        }
+
+        for (int debtId : debts.keySet()){
+            debts.get(debtId).setDebtPayments(readDebtPayments(debtId));
         }
         return debts;
     }
@@ -164,7 +172,8 @@ public class ReadData extends Database {
                         resultSet.getInt("debt_id"),
                         resultSet.getString("date"),
                         resultSet.getBigDecimal("amount"),
-                        resultSet.getBigDecimal("current_balance")
+                        resultSet.getBigDecimal("current_balance"),
+                        resultSet.getInt("id")
                 );
                 debtPayments.put(
                         resultSet.getInt("id"),
@@ -204,7 +213,8 @@ public class ReadData extends Database {
                         resultSet.getString("date"),
                         resultSet.getString("freq"),
                         resultSet.getString("category"),
-                        resultSet.getString("desc")
+                        resultSet.getString("desc"),
+                        resultSet.getInt("id")
                 );
                 expenses.put(
                         resultSet.getInt("id"),

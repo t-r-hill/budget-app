@@ -7,12 +7,14 @@ public class DebtPayment {
     String date;
     BigDecimal amount;
     BigDecimal currentBalance;
+    int id;
 
-    public DebtPayment(int debtId, String date, BigDecimal amount, BigDecimal currentBalance) {
+    public DebtPayment(int debtId, String date, BigDecimal amount, BigDecimal currentBalance, int id) {
         this.debtId = debtId;
         this.date = date;
         this.amount = amount;
         this.currentBalance = currentBalance;
+        this.id = id;
     }
 
     public DebtPayment() {
@@ -48,5 +50,13 @@ public class DebtPayment {
 
     public void setCurrentBalance(BigDecimal currentBalance) {
         this.currentBalance = currentBalance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

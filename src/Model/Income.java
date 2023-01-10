@@ -8,13 +8,16 @@ public class Income {
     String freq;
     String date;
     String source;
+    int id;
 
-    public Income(int userId, BigDecimal amount, String freq, String date, String source) {
+    public Income(int userId, BigDecimal amount, String freq, String date, String source, int id) {
         this.userId = userId;
         this.amount = amount;
         this.freq = freq;
         this.date = date;
         this.source = source;
+        this.id = id;
+
     }
 
     public Income(){
@@ -59,5 +62,13 @@ public class Income {
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

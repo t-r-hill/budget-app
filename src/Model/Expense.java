@@ -9,14 +9,17 @@ public class Expense {
     String freq;
     String category;
     String desc;
+    int id;
 
-    public Expense(int userId, BigDecimal amount, String date, String freq, String category, String desc) {
+    public Expense(int userId, BigDecimal amount, String date, String freq, String category, String desc, int id) {
         this.userId = userId;
         this.amount = amount;
         this.date = date;
         this.freq = freq;
         this.category = category;
         this.desc = desc;
+        this.id = id;
+
     }
 
     public Expense() {
@@ -68,5 +71,13 @@ public class Expense {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

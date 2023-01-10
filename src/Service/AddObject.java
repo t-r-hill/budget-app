@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Predicate;
 
-public class AddData {
+public class AddObject {
     Validate validate;
     CreateData createData;
 
     String lineBreak = "------------------------------";
 
-    public AddData(){
+    public AddObject(){
         validate = new Validate();
         createData = new CreateData();
     }
@@ -37,8 +37,8 @@ public class AddData {
         System.out.println("Please enter your email");
         email = validate.getAndValidateInput(scanner, emailAddress, "Please enter your email name as one word");
 
-        User user = new User(firstName, lastName, email);
         id = createData.createUser(firstName, lastName, email);
+        User user = new User(firstName, lastName, email, id);
 
         if (id > 0){
             System.out.println("Your user has been created");

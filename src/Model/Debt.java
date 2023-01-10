@@ -1,7 +1,9 @@
 package Model;
 
+import Data.ReadData;
+
 import java.math.BigDecimal;
-import java.util.List;
+import java.util.Map;
 
 public class Debt {
     int userId;
@@ -13,10 +15,11 @@ public class Debt {
     BigDecimal paymentAmount;
     String paymentDate;
     int isRepaid;
-    List<DebtPayment> debtPayments;
+    Map<Integer, DebtPayment> debtPayments;
+    int id;
 
     public Debt(int userId, String lenderName, BigDecimal initialAmount, BigDecimal interestRate,
-                int termMonths, String date, BigDecimal paymentAmount, String paymentDate, int isRepaid) {
+                int termMonths, String date, BigDecimal paymentAmount, String paymentDate, int isRepaid, int id) {
         this.userId = userId;
         this.lenderName = lenderName;
         this.initialAmount = initialAmount;
@@ -26,9 +29,15 @@ public class Debt {
         this.paymentAmount = paymentAmount;
         this.paymentDate = paymentDate;
         this.isRepaid = isRepaid;
+        this.id = id;
     }
 
     public Debt() {
+    }
+
+    public void loadDebtPayments(){
+        ReadData readData = new ReadData();
+        debtPayments = readData.readDebtPayments(this.id);
     }
 
     public int getUserId() {
@@ -103,11 +112,19 @@ public class Debt {
         this.isRepaid = isRepaid;
     }
 
-    public List<DebtPayment> getDebtPayments() {
+    public Map<Integer, DebtPayment> getDebtPayments() {
         return debtPayments;
     }
 
-    public void setDebtPayments(List<DebtPayment> debtPayments) {
+    public void setDebtPayments(Map<Integer, DebtPayment> debtPayments) {
         this.debtPayments = debtPayments;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
