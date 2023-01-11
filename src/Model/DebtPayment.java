@@ -2,7 +2,7 @@ package Model;
 
 import java.math.BigDecimal;
 
-public class DebtPayment {
+public class DebtPayment implements Transaction{
     int debtId;
     String date;
     BigDecimal amount;
@@ -58,5 +58,14 @@ public class DebtPayment {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "DebtPayment{" +
+                "date='" + date + '\'' +
+                ", amount=" + amount +
+                ", currentBalance=" + currentBalance +
+                '}';
     }
 }

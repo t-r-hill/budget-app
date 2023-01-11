@@ -5,7 +5,7 @@ import Data.ReadData;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public class Debt {
+public class Debt implements Transaction{
     int userId;
     String lenderName;
     BigDecimal initialAmount;

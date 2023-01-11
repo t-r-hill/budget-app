@@ -3,12 +3,55 @@ package Service;
 import Model.*;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PrintObjects {
 
-    public void printIncomes(User user){
+    public <T extends Transaction> void printIncomesBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+        Map<Integer, T> filteredItems = items
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue));
+
+        printIncomes((Map<Integer, Income>) filteredItems);
+    }
+
+    public <T extends Transaction> void printExpensesBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+        Map<Integer, T> filteredItems = items
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue));
+
+        printExpenses((Map<Integer, Expense>) filteredItems);
+    }
+
+    public <T extends Transaction> void printDebtPaymentsBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+        Map<Integer, T> filteredItems = items
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue));
+
+        printDebtPayments((Map<Integer, DebtPayment>) filteredItems);
+    }
+
+    public <T extends Transaction> void printDebtsBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+        Map<Integer, T> filteredItems = items
+                .entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        Map.Entry::getValue));
+
+        printDebts((Map<Integer, Debt>) filteredItems);
+    }
+    public void printIncomes(Map<Integer, Income> incomes){
         String leftAlignFormat = "| %-6d | %-10.2f | %-9s | %-10s | %-15s |%n";
-        Map<Integer, Income> incomes = user.getIncomes();
         Income income;
 
         System.out.format("+--------+------------+-----------+------------+-----------------+%n");
@@ -22,9 +65,8 @@ public class PrintObjects {
         System.out.format("+--------+------------+-----------+------------+-----------------+%n");
     }
 
-    public void printDebts(User user){
+    public void printDebts(Map<Integer, Debt> debts){
         String leftAlignFormat = "| %-6d | %-15s | %-14.2f | %-7.4f | %-4d | %-10s | %-14.2f | %-12s |%n";
-        Map<Integer, Debt> debts = user.getDebts();
         Debt debt;
 
         System.out.format("+--------+-----------------+----------------+---------+------+------------+----------------+--------------+%n");
@@ -38,9 +80,8 @@ public class PrintObjects {
         System.out.format("+--------+-----------------+----------------+---------+------+------------+----------------+--------------+%n");
     }
 
-    public void printDebtPayments(Debt debt){
+    public void printDebtPayments(Map<Integer, DebtPayment> debtPayments){
         String leftAlignFormat = "| %-6d | %-10.2f | %-17s | %-10s |%n";
-        Map<Integer, DebtPayment> debtPayments = debt.getDebtPayments();
         DebtPayment debtPayment;
 
         System.out.format("+--------+------------+-------------------+------------+%n");
@@ -54,9 +95,8 @@ public class PrintObjects {
         System.out.format("+--------+------------+-------------------+------------+%n");
     }
 
-    public void printExpenses(User user){
+    public void printExpenses(Map<Integer, Expense> expenses){
         String leftAlignFormat = "| %-6d | %-10.2f | %-9s | %-10s | %-15s | %-20s |%n";
-        Map<Integer, Expense> expenses = user.getExpenses();
         Expense expense;
 
         System.out.format("+--------+------------+-----------+------------+-----------------+----------------------+%n");

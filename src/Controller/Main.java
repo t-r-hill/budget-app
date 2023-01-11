@@ -4,6 +4,7 @@ import Data.ReadData;
 import Model.User;
 import Service.AccountSummary;
 import Service.AddObject;
+import Service.PrintObjects;
 import Service.Validate;
 
 import java.util.Map;
@@ -57,6 +58,7 @@ public class Main {
                     break;
                 case "4":
                     // View transactions menu
+                    viewTransactionsMenu(scanner, user);
                     break;
                 case "5":
                     // Reports menu
@@ -141,6 +143,7 @@ public class Main {
                     break;
                 case "4":
                     // Add debt payment
+                    addObject.addDebtPayment(scanner, user);
                     break;
                 case "5":
                     // Exit loop and return to main menu
@@ -156,7 +159,8 @@ public class Main {
         String input;
         Predicate<String> rule;
         Validate validate = new Validate();
-        AddObject addObject = new AddObject();
+        PrintObjects printObjects = new PrintObjects();
+        String[] dates;
 
         while (!exit){
             System.out.println(lineBreak);
@@ -172,19 +176,40 @@ public class Main {
 
             switch (input) {
                 case "1":
-                    // Add income
-                    addObject.addIncome(scanner, user);
+                    // Print income
+                    dates = getDatesFromUser(scanner);
+                    printObjects.printIncomesBetweenDates(user.getIncomes(), dates[0], dates[1]);
                     break;
                 case "2":
-                    // Add expense
-                    addObject.addExpense(scanner, user);
+                    // Print expense
+                    dates = getDatesFromUser(scanner);
+                    printObjects.printExpensesBetweenDates(user.getExpenses(), dates[0], dates[1]);
                     break;
                 case "3":
-                    // Add debt
-                    addObject.addDebt(scanner, user);
+                    // Print debt
+                    dates = getDatesFromUser(scanner);
+                    printObjects.printDebtsBetweenDates(user.getDebts(), dates[0], dates[1]);
                     break;
                 case "4":
-                    // Add debt payment
+                    // Print debt payment
+                    int debtId;
+                    Predicate<String> idFromTable = x -> {
+                        if (x == null) {
+                            return false;
+                        }
+                        try {
+                            int i = Integer.parseInt(x);
+                        } catch (NumberFormatException nfe) {
+                            return false;
+                        }
+                        return user.getDebts().containsKey(Integer.parseInt(x));
+                    };
+
+                    dates = getDatesFromUser(scanner);
+                    System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
+                    printObjects.printDebts(user.getDebts());
+                    debtId = Integer.parseInt(validate.getAndValidateInput(scanner, idFromTable, "Please only enter an ID from the table above"));
+                    printObjects.printDebtPaymentsBetweenDates(user.getDebts().get(debtId).getDebtPayments(), dates[0], dates[1]);
                     break;
                 case "5":
                     // Exit loop and return to main menu
@@ -193,5 +218,20 @@ public class Main {
 
             }
         }
+    }
+
+    static String[] getDatesFromUser(Scanner scanner){
+        Validate validate = new Validate();
+        Predicate<String> dateFormat = x -> x.matches("^20\\d{2}-(?:0[1-9]|1[12])-(?:[0-2][0-9]|3[01])$");
+        String[] dates;
+
+        System.out.println("Please enter the least recent date in the range which you wish to view");
+        String dateFrom = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
+
+        System.out.println("Please enter the most recent date in the range which you wish to view");
+        String dateTo = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
+
+        dates = new String[]{dateFrom, dateTo};
+        return dates;
     }
 }

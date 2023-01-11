@@ -2,7 +2,7 @@ package Model;
 
 import java.math.BigDecimal;
 
-public class Income {
+public class Income implements Transaction{
     int userId;
     BigDecimal amount;
     String freq;

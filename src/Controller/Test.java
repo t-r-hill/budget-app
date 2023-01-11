@@ -13,12 +13,13 @@ public class Test {
 
     public static void main(String[] args) {
 
-        PrintObjects printObjects = new PrintObjects();
-        Scanner scanner = new Scanner(System.in);
-        User user = Main.userMenu(scanner);
-
-        if (user != null){
-            printObjects.printExpenses(user);
-        }
+//        PrintObjects printObjects = new PrintObjects();
+//        Scanner scanner = new Scanner(System.in);
+//        User user = Main.userMenu(scanner);
+//
+//        if (user != null){
+//            printObjects.printExpenses(user);
+//        }
+        Integer.parseInt("the");
     }
 }

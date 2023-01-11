@@ -185,16 +185,33 @@ public class AddObject {
     }
 
     public void addDebtPayment(Scanner scanner, User user){
-        int debtId = 0;
+        int debtId;
         BigDecimal amount;
         BigDecimal currentBalance;
         String date;
         int id;
+        PrintObjects printObjects = new PrintObjects();
 
         Predicate<String> currencyAmount = x -> x.matches("^\\d{1,8}\\.\\d{2}$");
         Predicate<String> dateFormat = x -> x.matches("^20\\d{2}-(?:0[1-9]|1[12])-(?:[0-2][0-9]|3[01])$");
+        Predicate<String> idFromTable = x -> {
+            if (x == null) {
+                return false;
+            }
+            try {
+                int i = Integer.parseInt(x);
+            } catch (NumberFormatException nfe) {
+                return false;
+            }
+            return user.getDebts().containsKey(Integer.parseInt(x));
+        };
 
         System.out.println(lineBreak);
+
+        // Print out debts and ask user to select which one
+        System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
+        printObjects.printDebts(user.getDebts());
+        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, idFromTable, "Please only enter an ID from the table above"));
 
         System.out.println("Please enter the value of the payment");
         amount = new BigDecimal(validate.getAndValidateInput(scanner, currencyAmount, "Please enter an amount in the format xxxx.00"));
@@ -202,10 +219,8 @@ public class AddObject {
         System.out.println("Please enter the date you made the payment");
         date = validate.getAndValidateInput(scanner, dateFormat, "Please enter the date as YYYY-MM-DD");
 
-        System.out.println("Please enter the value of the payment");
+        System.out.println("Please enter the remaining balance");
         currentBalance = new BigDecimal(validate.getAndValidateInput(scanner, currencyAmount, "Please enter an amount in the format xxxx.00"));
-
-        // Print out debts and ask user to select which one
 
         id = createData.createDebtPayment(debtId, amount, date, currentBalance);
         DebtPayment debtPayment = new DebtPayment(debtId, date, amount, currentBalance, id);

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Expense {
+public class Expense implements Transaction {
     int userId;
     BigDecimal amount;
     String date;

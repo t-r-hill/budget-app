@@ -246,7 +246,7 @@ public class ReadSummaryData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("SELECT sum(current_balance) FROM debt_payments dp " +
                     "JOIN debts d " +
-                    "ON dp.debt_id = d.id" +
+                    "ON dp.debt_id = d.id " +
                     "JOIN " +
                     "(SELECT debt_id, max(date) last_date " +
                     "FROM debt_payments " +
