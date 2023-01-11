@@ -1,6 +1,8 @@
 package Model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Expense {
     int userId;
@@ -10,6 +12,25 @@ public class Expense {
     String category;
     String desc;
     int id;
+
+    public static List<String> categories = new ArrayList<>(
+            List.of(
+                    "rent",
+                    "groceries",
+                    "eating out",
+                    "alcohol",
+                    "childcare",
+                    "healthcare",
+                    "insurance",
+                    "petrol",
+                    "utilities",
+                    "internet/TV",
+                    "transport",
+                    "holiday",
+                    "mobile phone",
+                    "leisure",
+                    "gifts"
+    ));
 
     public Expense(int userId, BigDecimal amount, String date, String freq, String category, String desc, int id) {
         this.userId = userId;
@@ -79,5 +100,16 @@ public class Expense {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "Expense{" +
+                "amount=" + amount +
+                ", date='" + date + '\'' +
+                ", freq='" + freq + '\'' +
+                ", category='" + category + '\'' +
+                ", desc='" + desc + '\'' +
+                '}';
     }
 }

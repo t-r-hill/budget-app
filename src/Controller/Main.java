@@ -50,6 +50,7 @@ public class Main {
                     break;
                 case "2":
                     // Add new transaction menu
+                    addUpdateTransactionsMenu(scanner, user);
                     break;
                 case "3":
                     // Delete transaction menu
@@ -111,6 +112,7 @@ public class Main {
         String input;
         Predicate<String> rule;
         Validate validate = new Validate();
+        AddObject addObject = new AddObject();
 
         while (!exit){
             System.out.println(lineBreak);
@@ -121,19 +123,65 @@ public class Main {
             System.out.println("4) Debt Payment");
             System.out.println("5) Return to main menu");
 
-            rule = "1234"::contains;
+            rule = "12345"::contains;
             input = validate.getAndValidateInput(scanner, rule, "Please enter an option from the list above followed by return");
 
             switch (input) {
                 case "1":
                     // Add income
-
+                    addObject.addIncome(scanner, user);
                     break;
                 case "2":
                     // Add expense
+                    addObject.addExpense(scanner, user);
                     break;
                 case "3":
                     // Add debt
+                    addObject.addDebt(scanner, user);
+                    break;
+                case "4":
+                    // Add debt payment
+                    break;
+                case "5":
+                    // Exit loop and return to main menu
+                    exit = true;
+                    break;
+
+            }
+        }
+    }
+
+    static void viewTransactionsMenu(Scanner scanner, User user){
+        boolean exit = false;
+        String input;
+        Predicate<String> rule;
+        Validate validate = new Validate();
+        AddObject addObject = new AddObject();
+
+        while (!exit){
+            System.out.println(lineBreak);
+            System.out.println("What do you want add?");
+            System.out.println("1) Income");
+            System.out.println("2) Expense");
+            System.out.println("3) Debt");
+            System.out.println("4) Debt Payment");
+            System.out.println("5) Return to main menu");
+
+            rule = "12345"::contains;
+            input = validate.getAndValidateInput(scanner, rule, "Please enter an option from the list above followed by return");
+
+            switch (input) {
+                case "1":
+                    // Add income
+                    addObject.addIncome(scanner, user);
+                    break;
+                case "2":
+                    // Add expense
+                    addObject.addExpense(scanner, user);
+                    break;
+                case "3":
+                    // Add debt
+                    addObject.addDebt(scanner, user);
                     break;
                 case "4":
                     // Add debt payment

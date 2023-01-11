@@ -82,7 +82,7 @@ public class ReadData extends Database {
                         resultSet.getInt("user_id"),
                         resultSet.getBigDecimal("amount"),
                         resultSet.getString("freq"),
-                        resultSet.getString("date"),
+                        resultSet.getDate("date").toString(),
                         resultSet.getString("source"),
                         resultSet.getInt("id")
                 );
@@ -125,9 +125,9 @@ public class ReadData extends Database {
                         resultSet.getBigDecimal("initial_amount"),
                         resultSet.getBigDecimal("interest_rate"),
                         resultSet.getInt("term_months"),
-                        resultSet.getString("start_date"),
+                        resultSet.getDate("start_date").toString(),
                         resultSet.getBigDecimal("payment_amount"),
-                        resultSet.getString("payment_date"),
+                        resultSet.getDate("payment_date").toString(),
                         resultSet.getInt("is_repaid"),
                         resultSet.getInt("id")
                 );
@@ -170,7 +170,7 @@ public class ReadData extends Database {
             while (resultSet.next()){
                 DebtPayment debtPayment = new DebtPayment(
                         resultSet.getInt("debt_id"),
-                        resultSet.getString("date"),
+                        resultSet.getDate("date").toString(),
                         resultSet.getBigDecimal("amount"),
                         resultSet.getBigDecimal("current_balance"),
                         resultSet.getInt("id")
@@ -210,7 +210,7 @@ public class ReadData extends Database {
                 Expense expense = new Expense(
                         resultSet.getInt("user_id"),
                         resultSet.getBigDecimal("amount"),
-                        resultSet.getString("date"),
+                        resultSet.getDate("date").toString(),
                         resultSet.getString("freq"),
                         resultSet.getString("category"),
                         resultSet.getString("desc"),

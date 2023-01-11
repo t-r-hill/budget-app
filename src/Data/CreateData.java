@@ -68,8 +68,8 @@ public class CreateData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("INSERT INTO income" +
-                    "(user_id, amount, freq, date, source)" +
+            preparedStatement = connection.prepareStatement("INSERT INTO income " +
+                    "(user_id, amount, freq, date, source) " +
                     "VALUES (?, ?, ?, ?, ?);");
             preparedStatement.setInt(1, user_id);
             preparedStatement.setBigDecimal(2, amount);
@@ -101,7 +101,7 @@ public class CreateData extends Database {
         try {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO debts " +
-                    "(user_id, initial_amount, lender_name, interest_rate, term_months, start_date, payment_date, payment_amount)" +
+                    "(user_id, initial_amount, lender_name, interest_rate, term_months, start_date, payment_date, payment_amount) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
             preparedStatement.setInt(1, user_id);
             preparedStatement.setInt(5, term_months);
@@ -133,8 +133,8 @@ public class CreateData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("INSERT INTO debt_payments" +
-                    "(debt_id, amount, date, current_balance)" +
+            preparedStatement = connection.prepareStatement("INSERT INTO debt_payments " +
+                    "(debt_id, amount, date, current_balance) " +
                     "VALUES (?, ?, ?, ?);");
             preparedStatement.setInt(1, debt_id);
             preparedStatement.setBigDecimal(2, amount);
@@ -162,9 +162,9 @@ public class CreateData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("INSERT INTO expenses" +
-                    "(user_id, amount, freq, date, category, desc)" +
-                    "VALUES (?, ?, ?, ?, ?);");
+            preparedStatement = connection.prepareStatement("INSERT INTO expenses " +
+                    "(user_id, amount, freq, date, category, `desc`) " +
+                    "VALUES (?, ?, ?, ?, ?, ?);");
             preparedStatement.setInt(1, user_id);
             preparedStatement.setBigDecimal(2, amount);
             preparedStatement.setString(3, freq);
