@@ -3,48 +3,67 @@ package Service;
 import Model.*;
 
 import java.util.Map;
+import java.util.Scanner;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class PrintObjects {
 
-    public <T extends Transaction> void printIncomesBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+    public <T extends Transaction> void printIncomesBetweenDates(Map<Integer, T> items, Scanner scanner){
+        String[] dates =  getDatesFromUser(scanner);
+
         Map<Integer, T> filteredItems = items
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
         printIncomes((Map<Integer, Income>) filteredItems);
     }
 
-    public <T extends Transaction> void printExpensesBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+    public <T extends Transaction> void printExpensesBetweenDates(Map<Integer, T> items, Scanner scanner){
+        String[] dates = getDatesFromUser(scanner);
+
         Map<Integer, T> filteredItems = items
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
         printExpenses((Map<Integer, Expense>) filteredItems);
     }
 
-    public <T extends Transaction> void printDebtPaymentsBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
-        Map<Integer, T> filteredItems = items
+    public void printDebtPaymentsBetweenDates(Map<Integer, Debt> debts, Scanner scanner){
+        int debtId;
+        Map<Integer, DebtPayment> debtPayments;
+        Validate validate = new Validate();
+
+        System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
+        printDebts(debts);
+        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validDebtId, "Please only enter an ID from the table above", debts));
+        debtPayments = debts.get(debtId).getDebtPayments();
+
+        String[] dates = getDatesFromUser(scanner);
+
+        Map<Integer, DebtPayment> filteredItems = debtPayments
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
         printDebtPayments((Map<Integer, DebtPayment>) filteredItems);
     }
 
-    public <T extends Transaction> void printDebtsBetweenDates(Map<Integer, T> items, String dateFrom, String dateTo){
+    public <T extends Transaction> void printDebtsBetweenDates(Map<Integer, T> items, Scanner scanner){
+        String[] dates = getDatesFromUser(scanner);
+
         Map<Integer, T> filteredItems = items
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getValue().getDate().compareTo(dateFrom) > 0 & entry.getValue().getDate().compareTo(dateTo) < 0)
+                .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
@@ -108,5 +127,20 @@ public class PrintObjects {
                     expense.getCategory(), expense.getDesc());
         }
         System.out.format("+--------+------------+-----------+------------+-----------------+----------------------+%n");
+    }
+
+    static String[] getDatesFromUser(Scanner scanner){
+        Validate validate = new Validate();
+        Predicate<String> dateFormat = x -> x.matches("^20\\d{2}-(?:0[1-9]|1[12])-(?:[0-2][0-9]|3[01])$");
+        String[] dates;
+
+        System.out.println("Please enter the least recent date in the range which you wish to view");
+        String dateFrom = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
+
+        System.out.println("Please enter the most recent date in the range which you wish to view");
+        String dateTo = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
+
+        dates = new String[]{dateFrom, dateTo};
+        return dates;
     }
 }

@@ -51,7 +51,7 @@ public class Main {
                     break;
                 case "2":
                     // Add new transaction menu
-                    addUpdateTransactionsMenu(scanner, user);
+                    addTransactionsMenu(scanner, user);
                     break;
                 case "3":
                     // Delete transaction menu
@@ -109,7 +109,7 @@ public class Main {
         return user;
     }
 
-    static void addUpdateTransactionsMenu(Scanner scanner, User user){
+    static void addTransactionsMenu(Scanner scanner, User user){
         boolean exit = false;
         String input;
         Predicate<String> rule;
@@ -154,6 +154,52 @@ public class Main {
         }
     }
 
+    static void deleteTransactionsMenu(Scanner scanner, User user){
+        boolean exit = false;
+        String input;
+        Predicate<String> rule;
+        Validate validate = new Validate();
+        PrintObjects printObjects = new PrintObjects();
+        String[] dates;
+
+        while (!exit){
+            System.out.println(lineBreak);
+            System.out.println("What do you want to delete?");
+            System.out.println("1) Income");
+            System.out.println("2) Expense");
+            System.out.println("3) Debt");
+            System.out.println("4) Debt Payment");
+            System.out.println("5) Return to main menu");
+
+            rule = "12345"::contains;
+            input = validate.getAndValidateInput(scanner, rule, "Please enter an option from the list above followed by return");
+
+            switch (input) {
+                case "1":
+                    // Delete income
+
+                    break;
+                case "2":
+                    // Delete expense
+
+                    break;
+                case "3":
+                    // Delete debt
+
+                    break;
+                case "4":
+                    // Delete debt payment
+
+                    break;
+                case "5":
+                    // Exit loop and return to main menu
+                    exit = true;
+                    break;
+
+            }
+        }
+    }
+
     static void viewTransactionsMenu(Scanner scanner, User user){
         boolean exit = false;
         String input;
@@ -164,7 +210,7 @@ public class Main {
 
         while (!exit){
             System.out.println(lineBreak);
-            System.out.println("What do you want add?");
+            System.out.println("What do you want to add?");
             System.out.println("1) Income");
             System.out.println("2) Expense");
             System.out.println("3) Debt");
@@ -177,39 +223,19 @@ public class Main {
             switch (input) {
                 case "1":
                     // Print income
-                    dates = getDatesFromUser(scanner);
-                    printObjects.printIncomesBetweenDates(user.getIncomes(), dates[0], dates[1]);
+                    printObjects.printIncomesBetweenDates(user.getIncomes(), scanner);
                     break;
                 case "2":
                     // Print expense
-                    dates = getDatesFromUser(scanner);
-                    printObjects.printExpensesBetweenDates(user.getExpenses(), dates[0], dates[1]);
+                    printObjects.printExpensesBetweenDates(user.getExpenses(), scanner);
                     break;
                 case "3":
                     // Print debt
-                    dates = getDatesFromUser(scanner);
-                    printObjects.printDebtsBetweenDates(user.getDebts(), dates[0], dates[1]);
+                    printObjects.printDebtsBetweenDates(user.getDebts(), scanner);
                     break;
                 case "4":
                     // Print debt payment
-                    int debtId;
-                    Predicate<String> idFromTable = x -> {
-                        if (x == null) {
-                            return false;
-                        }
-                        try {
-                            int i = Integer.parseInt(x);
-                        } catch (NumberFormatException nfe) {
-                            return false;
-                        }
-                        return user.getDebts().containsKey(Integer.parseInt(x));
-                    };
-
-                    dates = getDatesFromUser(scanner);
-                    System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
-                    printObjects.printDebts(user.getDebts());
-                    debtId = Integer.parseInt(validate.getAndValidateInput(scanner, idFromTable, "Please only enter an ID from the table above"));
-                    printObjects.printDebtPaymentsBetweenDates(user.getDebts().get(debtId).getDebtPayments(), dates[0], dates[1]);
+                    printObjects.printDebtPaymentsBetweenDates(user.getDebts(), scanner);
                     break;
                 case "5":
                     // Exit loop and return to main menu
