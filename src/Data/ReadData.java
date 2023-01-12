@@ -69,7 +69,7 @@ public class ReadData extends Database {
         connection = null;
         preparedStatement = null;
         resultSet = null;
-        Map<Integer,  Income> incomes = new HashMap<>();
+        Map<Integer, Income> incomes = new HashMap<>();
 
         try {
             connection = DriverManager.getConnection(connectionString);

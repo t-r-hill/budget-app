@@ -4,6 +4,7 @@ import Data.CreateData;
 import Model.*;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -161,6 +162,7 @@ public class AddObject {
             Debt debt = new Debt(user.getId(), lenderName, initialAmount, interestRate, termMonths, startDate, paymentAmount, paymentDate, 0, id);
             System.out.println(debt);
             user.getDebts().put(id, debt);
+            user.getDebts().get(id).setDebtPayments(new HashMap<>());
         } else{
             System.out.println("There's been an error adding the debt, please try again");
         }
@@ -176,29 +178,33 @@ public class AddObject {
 
         System.out.println(lineBreak);
 
-        // Print out debts and ask user to select which one
-        System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
-        printObjects.printDebts(user.getDebts());
-        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", user.getDebts()));
+        if (!user.getDebts().isEmpty()){
+            // Print out debts and ask user to select which one
+            System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
+            printObjects.printDebts(user.getDebts());
+            debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", user.getDebts()));
 
-        System.out.println("Please enter the value of the payment");
-        amount = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));
+            System.out.println("Please enter the value of the payment");
+            amount = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));
 
-        System.out.println("Please enter the date you made the payment");
-        date = validate.getAndValidateInput(scanner, validate.dateFormat, "Please enter the date as YYYY-MM-DD");
+            System.out.println("Please enter the date you made the payment");
+            date = validate.getAndValidateInput(scanner, validate.dateFormat, "Please enter the date as YYYY-MM-DD");
 
-        System.out.println("Please enter the remaining balance");
-        currentBalance = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));
+            System.out.println("Please enter the remaining balance");
+            currentBalance = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));
 
-        id = createData.createDebtPayment(debtId, amount, date, currentBalance);
+            id = createData.createDebtPayment(debtId, amount, date, currentBalance);
 
-        if (id > 0){
-            System.out.println("Your debt payment has been added");
-            DebtPayment debtPayment = new DebtPayment(debtId, date, amount, currentBalance, id);
-            System.out.println(debtPayment);
-            user.getDebts().get(debtId).getDebtPayments().put(id, debtPayment);
+            if (id > 0){
+                System.out.println("Your debt payment has been added");
+                DebtPayment debtPayment = new DebtPayment(debtId, date, amount, currentBalance, id);
+                System.out.println(debtPayment);
+                user.getDebts().get(debtId).getDebtPayments().put(id, debtPayment);
+            } else{
+                System.out.println("There's been an error adding the income, please try again");
+            }
         } else{
-            System.out.println("There's been an error adding the income, please try again");
+            System.out.println("You need to create a debt before you can create a debt payment");
         }
     }
 }

@@ -178,15 +178,15 @@ public class Main {
                     break;
                 case "2":
                     // Delete expense
-
+                    deleteObjects.deleteExpense(scanner, user);
                     break;
                 case "3":
                     // Delete debt
-
+                    deleteObjects.deleteDebt(scanner, user);
                     break;
                 case "4":
                     // Delete debt payment
-
+                    deleteObjects.deleteDebtPayment(scanner, user);
                     break;
                 case "5":
                     // Exit loop and return to main menu

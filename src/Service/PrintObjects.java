@@ -19,56 +19,63 @@ public class PrintObjects {
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
-        printIncomes((Map<Integer, Income>) filteredItems);
+        printIncomes(filteredItems);
         return filteredItems;
     }
 
-    public <T extends Transaction> void printExpensesBetweenDates(Map<Integer, T> items, Scanner scanner){
+    public Map<Integer, Expense> printExpensesBetweenDates(Map<Integer, Expense> items, Scanner scanner){
         String[] dates = getDatesFromUser(scanner);
 
-        Map<Integer, T> filteredItems = items
+        Map<Integer, Expense> filteredItems = items
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
-        printExpenses((Map<Integer, Expense>) filteredItems);
+        printExpenses(filteredItems);
+        return filteredItems;
     }
 
-    public void printDebtPaymentsBetweenDates(Map<Integer, Debt> debts, Scanner scanner){
+    public Map<Integer, DebtPayment> printDebtPaymentsBetweenDates(Map<Integer, Debt> debts, Scanner scanner){
         int debtId;
         Map<Integer, DebtPayment> debtPayments;
         Validate validate = new Validate();
 
-        System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
-        printDebts(debts);
-        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", debts));
-        debtPayments = debts.get(debtId).getDebtPayments();
+        if (!debts.isEmpty()){
+            System.out.println("Please enter the ID of the debt which you want to view payments for, from the table below");
+            printDebts(debts);
+            debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", debts));
+            debtPayments = debts.get(debtId).getDebtPayments();
 
-        String[] dates = getDatesFromUser(scanner);
+            String[] dates = getDatesFromUser(scanner);
 
-        Map<Integer, DebtPayment> filteredItems = debtPayments
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
-                .collect(Collectors.toMap(Map.Entry::getKey,
-                        Map.Entry::getValue));
+            Map<Integer, DebtPayment> filteredItems = debtPayments
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
+                    .collect(Collectors.toMap(Map.Entry::getKey,
+                            Map.Entry::getValue));
 
-        printDebtPayments((Map<Integer, DebtPayment>) filteredItems);
+            printDebtPayments(filteredItems);
+        } else {
+            System.out.println("You need to create a debt before you can have a debt payment");
+        }
+        return null;
     }
 
-    public <T extends Transaction> void printDebtsBetweenDates(Map<Integer, T> items, Scanner scanner){
+    public Map<Integer, Debt> printDebtsBetweenDates(Map<Integer, Debt> items, Scanner scanner){
         String[] dates = getDatesFromUser(scanner);
 
-        Map<Integer, T> filteredItems = items
+        Map<Integer, Debt> filteredItems = items
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue));
 
-        printDebts((Map<Integer, Debt>) filteredItems);
+        printDebts(filteredItems);
+        return filteredItems;
     }
     public void printIncomes(Map<Integer, Income> incomes){
         String leftAlignFormat = "| %-6d | %-10.2f | %-9s | %-10s | %-15s |%n";
@@ -86,18 +93,18 @@ public class PrintObjects {
     }
 
     public void printDebts(Map<Integer, Debt> debts){
-        String leftAlignFormat = "| %-6d | %-15s | %-14.2f | %-7.4f | %-4d | %-10s | %-14.2f | %-12s |%n";
+        String leftAlignFormat = "| %-6d | %-23s | %-14.2f | %-7.4f | %-4d | %-10s | %-14.2f | %-12s |%n";
         Debt debt;
 
-        System.out.format("+--------+-----------------+----------------+---------+------+------------+----------------+--------------+%n");
-        System.out.format("| ID     | Lender name     | Initial Amount | Rate    | Term | Start Date | Payment Amount | Payment Date |%n");
-        System.out.format("+--------+-----------------+----------------+---------+------+------------+----------------+--------------+%n");
+        System.out.format("+--------+-------------------------+----------------+---------+------+------------+----------------+--------------+%n");
+        System.out.format("| ID     | Lender name             | Initial Amount | Rate    | Term | Start Date | Payment Amount | Payment Date |%n");
+        System.out.format("+--------+-------------------------+----------------+---------+------+------------+----------------+--------------+%n");
         for (int id : debts.keySet()){
             debt = debts.get(id);
             System.out.format(leftAlignFormat, debt.getId(), debt.getLenderName(), debt.getInitialAmount(), debt.getInterestRate(),
                     debt.getTermMonths(), debt.getDate(), debt.getPaymentAmount(), debt.getPaymentDate());
         }
-        System.out.format("+--------+-----------------+----------------+---------+------+------------+----------------+--------------+%n");
+        System.out.format("+--------+-------------------------+----------------+---------+------+------------+----------------+--------------+%n");
     }
 
     public void printDebtPayments(Map<Integer, DebtPayment> debtPayments){
