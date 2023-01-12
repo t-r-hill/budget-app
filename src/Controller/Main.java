@@ -2,10 +2,7 @@ package Controller;
 
 import Data.ReadData;
 import Model.User;
-import Service.AccountSummary;
-import Service.AddObject;
-import Service.PrintObjects;
-import Service.Validate;
+import Service.*;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -55,6 +52,7 @@ public class Main {
                     break;
                 case "3":
                     // Delete transaction menu
+                    deleteTransactionsMenu(scanner, user);
                     break;
                 case "4":
                     // View transactions menu
@@ -159,8 +157,7 @@ public class Main {
         String input;
         Predicate<String> rule;
         Validate validate = new Validate();
-        PrintObjects printObjects = new PrintObjects();
-        String[] dates;
+        DeleteObjects deleteObjects = new DeleteObjects();
 
         while (!exit){
             System.out.println(lineBreak);
@@ -177,7 +174,7 @@ public class Main {
             switch (input) {
                 case "1":
                     // Delete income
-
+                    deleteObjects.deleteIncome(scanner, user);
                     break;
                 case "2":
                     // Delete expense
@@ -206,11 +203,10 @@ public class Main {
         Predicate<String> rule;
         Validate validate = new Validate();
         PrintObjects printObjects = new PrintObjects();
-        String[] dates;
 
         while (!exit){
             System.out.println(lineBreak);
-            System.out.println("What do you want to add?");
+            System.out.println("What do you want to view?");
             System.out.println("1) Income");
             System.out.println("2) Expense");
             System.out.println("3) Debt");
@@ -244,20 +240,5 @@ public class Main {
 
             }
         }
-    }
-
-    static String[] getDatesFromUser(Scanner scanner){
-        Validate validate = new Validate();
-        Predicate<String> dateFormat = x -> x.matches("^20\\d{2}-(?:0[1-9]|1[12])-(?:[0-2][0-9]|3[01])$");
-        String[] dates;
-
-        System.out.println("Please enter the least recent date in the range which you wish to view");
-        String dateFrom = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
-
-        System.out.println("Please enter the most recent date in the range which you wish to view");
-        String dateTo = validate.getAndValidateInput(scanner, dateFormat,"Please enter a date in the format YYYY-MM-DD");
-
-        dates = new String[]{dateFrom, dateTo};
-        return dates;
     }
 }

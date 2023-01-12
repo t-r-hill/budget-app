@@ -179,7 +179,7 @@ public class AddObject {
         // Print out debts and ask user to select which one
         System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
         printObjects.printDebts(user.getDebts());
-        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validDebtId, "Please only enter an ID from the table above", user.getDebts()));
+        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", user.getDebts()));
 
         System.out.println("Please enter the value of the payment");
         amount = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));

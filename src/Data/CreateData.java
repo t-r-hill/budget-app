@@ -70,13 +70,20 @@ public class CreateData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO income " +
                     "(user_id, amount, freq, date, source) " +
-                    "VALUES (?, ?, ?, ?, ?);");
+                    "VALUES (?, ?, ?, ?, ?);", columnNames);
             preparedStatement.setInt(1, user_id);
             preparedStatement.setBigDecimal(2, amount);
             preparedStatement.setString(3, freq);
             preparedStatement.setString(4, date);
             preparedStatement.setString(5, source);
             result = preparedStatement.executeUpdate();
+
+            if (result > 0){
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    result = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println("SQL exception occurred");
             e.printStackTrace();
@@ -102,7 +109,7 @@ public class CreateData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO debts " +
                     "(user_id, initial_amount, lender_name, interest_rate, term_months, start_date, payment_date, payment_amount) " +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);");
+                    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);", columnNames);
             preparedStatement.setInt(1, user_id);
             preparedStatement.setInt(5, term_months);
             preparedStatement.setBigDecimal(2, initial_amount);
@@ -112,6 +119,13 @@ public class CreateData extends Database {
             preparedStatement.setString(6, start_date);
             preparedStatement.setString(7, payment_date);
             result = preparedStatement.executeUpdate();
+
+            if (result > 0){
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    result = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println("SQL exception occurred");
             e.printStackTrace();
@@ -135,12 +149,19 @@ public class CreateData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO debt_payments " +
                     "(debt_id, amount, date, current_balance) " +
-                    "VALUES (?, ?, ?, ?);");
+                    "VALUES (?, ?, ?, ?);", columnNames);
             preparedStatement.setInt(1, debt_id);
             preparedStatement.setBigDecimal(2, amount);
             preparedStatement.setBigDecimal(4, current_balance);
             preparedStatement.setString(3, date);
             result = preparedStatement.executeUpdate();
+
+            if (result > 0){
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    result = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println("SQL exception occurred");
             e.printStackTrace();
@@ -164,7 +185,7 @@ public class CreateData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("INSERT INTO expenses " +
                     "(user_id, amount, freq, date, category, `desc`) " +
-                    "VALUES (?, ?, ?, ?, ?, ?);");
+                    "VALUES (?, ?, ?, ?, ?, ?);", columnNames);
             preparedStatement.setInt(1, user_id);
             preparedStatement.setBigDecimal(2, amount);
             preparedStatement.setString(3, freq);
@@ -172,6 +193,13 @@ public class CreateData extends Database {
             preparedStatement.setString(5, category);
             preparedStatement.setString(6, desc);
             result = preparedStatement.executeUpdate();
+
+            if (result > 0){
+                generatedKeys = preparedStatement.getGeneratedKeys();
+                if (generatedKeys.next()){
+                    result = generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException e) {
             System.out.println("SQL exception occurred");
             e.printStackTrace();

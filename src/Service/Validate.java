@@ -1,6 +1,7 @@
 package Service;
 
 import Model.Debt;
+import Model.Transaction;
 import Model.User;
 
 import java.util.Map;
@@ -19,7 +20,7 @@ public class Validate {
     public Predicate<String> frequency = x -> x.equals("one-off") | x.equals("weekly") | x.equals("monthly");
     public Predicate<String> oneWord = x -> !x.contains(" ");
     public Predicate<String> emailAddress = x -> x.matches("^(.+)@(.+)$");
-    public BiPredicate<String, Map<Integer, Debt>> validDebtId = (input, debts) -> {
+    public BiPredicate<String, Map<Integer, ? extends Transaction>> validId = (input, items) -> {
         if (input == null) {
             return false;
         }
@@ -28,7 +29,7 @@ public class Validate {
         } catch (NumberFormatException nfe) {
             return false;
         }
-        return debts.containsKey(Integer.parseInt(input));
+        return items.containsKey(Integer.parseInt(input));
     };
 
     public String getAndValidateInput(Scanner scanner, Predicate<String> rule, String message){
@@ -40,11 +41,11 @@ public class Validate {
         return input;
     }
 
-    public String getAndValidateInput(Scanner scanner, BiPredicate<String, Map<Integer, Debt>> rule, String message, Map<Integer, Debt> debts){
+    public String getAndValidateInput(Scanner scanner, BiPredicate<String, Map<Integer, ? extends Transaction>> rule, String message, Map<Integer, ? extends Transaction> items){
         String input = scanner.nextLine();
-        if (!rule.test(input, debts)){
+        if (!rule.test(input, items)){
             System.out.println(message);
-            input = getAndValidateInput(scanner, rule, message, debts);
+            input = getAndValidateInput(scanner, rule, message, items);
         }
         return input;
     }

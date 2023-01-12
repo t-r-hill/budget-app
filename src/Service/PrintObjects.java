@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 public class PrintObjects {
 
-    public <T extends Transaction> void printIncomesBetweenDates(Map<Integer, T> items, Scanner scanner){
+    public Map<Integer, Income> printIncomesBetweenDates(Map<Integer, Income> items, Scanner scanner){
         String[] dates =  getDatesFromUser(scanner);
 
-        Map<Integer, T> filteredItems = items
+        Map<Integer, Income> filteredItems = items
                 .entrySet()
                 .stream()
                 .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
@@ -20,6 +20,7 @@ public class PrintObjects {
                         Map.Entry::getValue));
 
         printIncomes((Map<Integer, Income>) filteredItems);
+        return filteredItems;
     }
 
     public <T extends Transaction> void printExpensesBetweenDates(Map<Integer, T> items, Scanner scanner){
@@ -42,7 +43,7 @@ public class PrintObjects {
 
         System.out.println("Please enter the ID of the debt which you want to add a payment for, from the table below");
         printDebts(debts);
-        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validDebtId, "Please only enter an ID from the table above", debts));
+        debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", debts));
         debtPayments = debts.get(debtId).getDebtPayments();
 
         String[] dates = getDatesFromUser(scanner);
