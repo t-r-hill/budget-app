@@ -241,4 +241,46 @@ public class Main {
             }
         }
     }
+
+    static void reportingMenu(Scanner scanner, User user){
+        boolean exit = false;
+        String input;
+        Predicate<String> rule;
+        Validate validate = new Validate();
+        Reporting reporting = new Reporting();
+
+        while (!exit){
+            System.out.println(lineBreak);
+            System.out.println("What report do you want to run?");
+            System.out.println("1) Future Balance Estimate");
+            System.out.println("2) Expense");
+            System.out.println("3) Debt");
+            System.out.println("4) Debt Payment");
+            System.out.println("5) Return to main menu");
+
+            rule = "12345"::contains;
+            input = validate.getAndValidateInput(scanner, rule, "Please enter an option from the list above followed by return");
+
+            switch (input) {
+                case "1":
+                    // Print Future Balance
+                    reporting.getFutureBalance(scanner, user);
+                    break;
+                case "2":
+
+                    break;
+                case "3":
+
+                    break;
+                case "4":
+
+                    break;
+                case "5":
+                    // Exit loop and return to main menu
+                    exit = true;
+                    break;
+
+            }
+        }
+    }
 }

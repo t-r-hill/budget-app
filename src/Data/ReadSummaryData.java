@@ -1,7 +1,5 @@
 package Data;
 
-import Model.User;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -26,7 +24,7 @@ public class ReadSummaryData extends Database {
         }
     }
 
-    public BigDecimal totalIncome(int userId) {
+    public BigDecimal totalIncomeUntoDate(int userId, String date) {
         connection = null;
         preparedStatement = null;
         resultSet = null;
@@ -34,8 +32,9 @@ public class ReadSummaryData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("SELECT SUM(amount) FROM income WHERE user_id = ?;");
+            preparedStatement = connection.prepareStatement("SELECT SUM(amount) FROM income WHERE user_id = ? AND date <= ?;");
             preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2,date);
             resultSet = preparedStatement.executeQuery();
             // Assign to POJO
             while (resultSet.next()) {
@@ -95,7 +94,48 @@ public class ReadSummaryData extends Database {
         return total == null ? BigDecimal.ZERO : total;
     }
 
-    public BigDecimal totalExpenses(int userId) {
+    public Map<String, BigDecimal> monthIncomeByFrequency(int userId, String month) {
+        connection = null;
+        preparedStatement = null;
+        resultSet = null;
+        Map<String, BigDecimal> totals = new HashMap<>();
+
+        try {
+            connection = DriverManager.getConnection(connectionString);
+            preparedStatement = connection.prepareStatement("SELECT freq, SUM(amount) FROM income " +
+                    "WHERE user_id = ? " +
+                    "AND date >= ? " +
+                    "AND date < DATE(DATE_ADD(?, INTERVAL 1 MONTH)) " +
+                    "GROUP BY freq;");
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2,month);
+            preparedStatement.setString(3,month);
+            resultSet = preparedStatement.executeQuery();
+            // Assign to POJO
+            while (resultSet.next()) {
+                totals.put(
+                        resultSet.getString(1),
+                        resultSet.getBigDecimal(2)
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL exception occurred");
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                preparedStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                System.out.println("Exception occurred - couldn't close connection");
+                e.printStackTrace();
+            }
+        }
+        return totals;
+    }
+
+    public BigDecimal totalExpensesUntoDate(int userId, String date) {
         connection = null;
         preparedStatement = null;
         resultSet = null;
@@ -103,8 +143,9 @@ public class ReadSummaryData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("SELECT SUM(amount) FROM expenses WHERE user_id = ?;");
+            preparedStatement = connection.prepareStatement("SELECT SUM(amount) FROM expenses WHERE user_id = ? AND date <= ?;");
             preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, date);
             resultSet = preparedStatement.executeQuery();
             // Assign to POJO
             while (resultSet.next()) {
@@ -164,7 +205,48 @@ public class ReadSummaryData extends Database {
         return total == null ? BigDecimal.ZERO : total;
     }
 
-    public BigDecimal totalDebtPayments(int userId) {
+    public Map<String, BigDecimal> monthExpensesByFrequency(int userId, String month) {
+        connection = null;
+        preparedStatement = null;
+        resultSet = null;
+        Map<String, BigDecimal> totals = new HashMap<>();
+
+        try {
+            connection = DriverManager.getConnection(connectionString);
+            preparedStatement = connection.prepareStatement("SELECT freq, SUM(amount) FROM expenses " +
+                    "WHERE user_id = ? " +
+                    "AND date >= ? " +
+                    "AND date < DATE(DATE_ADD(?, INTERVAL 1 MONTH)) " +
+                    "GROUP BY freq;");
+            preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2,month);
+            preparedStatement.setString(3,month);
+            resultSet = preparedStatement.executeQuery();
+            // Assign to POJO
+            while (resultSet.next()) {
+                totals.put(
+                        resultSet.getString(1),
+                        resultSet.getBigDecimal(2)
+                );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL exception occurred");
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                preparedStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                System.out.println("Exception occurred - couldn't close connection");
+                e.printStackTrace();
+            }
+        }
+        return totals;
+    }
+
+    public BigDecimal totalDebtPaymentsUntoDate(int userId, String date) {
         connection = null;
         preparedStatement = null;
         resultSet = null;
@@ -174,8 +256,10 @@ public class ReadSummaryData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("SELECT SUM(debt_payments.amount) " +
                     "FROM debts JOIN debt_payments ON debts.id = debt_payments.debt_id " +
-                    "WHERE debts.user_id = ?;");
+                    "WHERE debts.user_id = ?" +
+                    "AND date <= ?;");
             preparedStatement.setInt(1, userId);
+            preparedStatement.setString(2, date);
             resultSet = preparedStatement.executeQuery();
             // Assign to POJO
             while (resultSet.next()) {

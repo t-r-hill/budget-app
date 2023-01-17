@@ -235,4 +235,44 @@ public class ReadData extends Database {
         }
         return expenses;
     }
+
+    public Integer getMostRecentDebtPaymentId(Debt debt){
+        connection = null;
+        preparedStatement = null;
+        resultSet = null;
+        Integer debtPaymentId = null;
+
+        try {
+            connection = DriverManager.getConnection(connectionString);
+            preparedStatement = connection.prepareStatement("SELECT dp.id FROM debt_payments dp " +
+                    "JOIN debts d " +
+                    "ON dp.debt_id = d.id " +
+                    "JOIN " +
+                    "(SELECT debt_id, max(date) last_date " +
+                    "FROM debt_payments " +
+                    "WHERE debt_id = ?) m " +
+                    "ON dp.debt_id = m.debt_id " +
+                    "AND dp.date = m.last_date " +
+                    "WHERE d.id = ?;");
+            preparedStatement.setInt(1, debt.getId());
+            preparedStatement.setInt(2, debt.getId());
+            resultSet = preparedStatement.executeQuery();
+            //Assign to POJO
+            while (resultSet.next()){
+                debtPaymentId = resultSet.getInt(1);
+            }
+        } catch (SQLException e) {
+            System.out.println("SQL exception occurred");
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                preparedStatement.close();
+            } catch (SQLException e) {
+                System.out.println("Exception occurred - couldn't close connection");
+                e.printStackTrace();
+            }
+        }
+        return debtPaymentId;
+    }
 }

@@ -1,6 +1,7 @@
 package Service;
 
 import Data.CreateData;
+import Data.ReadData;
 import Model.*;
 
 import java.math.BigDecimal;
@@ -191,7 +192,7 @@ public class AddObject {
             date = validate.getAndValidateInput(scanner, validate.dateFormat, "Please enter the date as YYYY-MM-DD");
 
             System.out.println("Please enter the remaining balance");
-            currentBalance = new BigDecimal(validate.getAndValidateInput(scanner, validate.currencyAmount, "Please enter an amount in the format xxxx.00"));
+            currentBalance = calculateCurrentBalance(user.getDebts().get(debtId), amount, date);
 
             id = createData.createDebtPayment(debtId, amount, date, currentBalance);
 
@@ -206,5 +207,14 @@ public class AddObject {
         } else{
             System.out.println("You need to create a debt before you can create a debt payment");
         }
+    }
+
+    public BigDecimal calculateCurrentBalance(Debt debt, BigDecimal paymentAmount, String paymentDate){
+        ReadData readData = new ReadData();
+        Reporting reporting = new Reporting();
+        BigDecimal previousBalance = debt.getDebtPayments().get(readData.getMostRecentDebtPaymentId(debt)).getCurrentBalance();
+        BigDecimal interestCharged = reporting.calculateInterestOwedUntoDate(debt, paymentDate);
+
+        return previousBalance.add(interestCharged).subtract(paymentAmount);
     }
 }

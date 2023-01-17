@@ -4,6 +4,8 @@ import Model.Debt;
 import Model.Transaction;
 import Model.User;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.BiPredicate;
@@ -11,7 +13,24 @@ import java.util.function.Predicate;
 
 public class Validate {
 
-    public Predicate<String> dateFormat = x -> x.matches("^20\\d{2}-(?:0[1-9]|1[12])-(?:[0-2][0-9]|3[01])$");
+    public Predicate<String> dateFormat = x -> {
+        if (x == null) return false;
+        try{
+            LocalDate.parse(x);
+        } catch (DateTimeParseException dtpe){
+            return false;
+        }
+        return true;
+    };
+    public Predicate<String> dateFormatMonth = x -> {
+        if (x == null) return false;
+        try{
+            LocalDate.parse(x);
+        } catch (DateTimeParseException dtpe){
+            return false;
+        }
+        return LocalDate.parse(x).getDayOfMonth() == 1;
+    };
     public Predicate<String> currencyAmount = x -> x.matches("^\\d{1,8}\\.\\d{2}$");
     public Predicate<String> interest = x -> x.matches("^\\d{0,2}\\.\\d{1,4}$");
     public Predicate<String> digits = x -> x.matches("\\d{1,3}");

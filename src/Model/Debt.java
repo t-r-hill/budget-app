@@ -17,6 +17,7 @@ public class Debt implements Transaction{
     int isRepaid;
     Map<Integer, DebtPayment> debtPayments;
     int id;
+    BigDecimal currentBalance;
 
     public Debt(int userId, String lenderName, BigDecimal initialAmount, BigDecimal interestRate,
                 int termMonths, String date, BigDecimal paymentAmount, String paymentDate, int isRepaid, int id) {
@@ -126,5 +127,13 @@ public class Debt implements Transaction{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public BigDecimal getCurrentBalance() {
+        return currentBalance;
+    }
+
+    public void setCurrentBalance(BigDecimal currentBalance) {
+        this.currentBalance = currentBalance;
     }
 }
