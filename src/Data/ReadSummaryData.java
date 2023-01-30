@@ -256,7 +256,7 @@ public class ReadSummaryData extends Database {
             connection = DriverManager.getConnection(connectionString);
             preparedStatement = connection.prepareStatement("SELECT SUM(debt_payments.amount) " +
                     "FROM debts JOIN debt_payments ON debts.id = debt_payments.debt_id " +
-                    "WHERE debts.user_id = ?" +
+                    "WHERE debts.user_id = ? " +
                     "AND date <= ?;");
             preparedStatement.setInt(1, userId);
             preparedStatement.setString(2, date);
@@ -328,15 +328,17 @@ public class ReadSummaryData extends Database {
 
         try {
             connection = DriverManager.getConnection(connectionString);
-            preparedStatement = connection.prepareStatement("SELECT sum(current_balance) FROM debt_payments dp " +
-                    "JOIN debts d " +
-                    "ON dp.debt_id = d.id " +
+            preparedStatement = connection.prepareStatement("SELECT SUM(IFNULL(cb.current_balance, d.initial_amount)) FROM debts d " +
+                    "JOIN " +
+                    "(SELECT dp.debt_id, dp.current_balance " +
+                    "FROM debt_payments dp " +
                     "JOIN " +
                     "(SELECT debt_id, max(date) last_date " +
                     "FROM debt_payments " +
                     "GROUP BY debt_id) m " +
                     "ON dp.debt_id = m.debt_id " +
-                    "AND dp.date = m.last_date " +
+                    "AND dp.date = m.last_date) cb " +
+                    "ON d.id = cb.debt_id " +
                     "WHERE d.user_id = ?;");
             preparedStatement.setInt(1, userId);
             resultSet = preparedStatement.executeQuery();

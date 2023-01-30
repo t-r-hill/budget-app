@@ -8,7 +8,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
 public class AddObject {
     Validate validate;
@@ -191,8 +190,7 @@ public class AddObject {
             System.out.println("Please enter the date you made the payment");
             date = validate.getAndValidateInput(scanner, validate.dateFormat, "Please enter the date as YYYY-MM-DD");
 
-            System.out.println("Please enter the remaining balance");
-            currentBalance = calculateCurrentBalance(user.getDebts().get(debtId), amount, date);
+            currentBalance = calculateCurrentDebtBalance(user.getDebts().get(debtId), amount, date);
 
             id = createData.createDebtPayment(debtId, amount, date, currentBalance);
 
@@ -209,10 +207,15 @@ public class AddObject {
         }
     }
 
-    public BigDecimal calculateCurrentBalance(Debt debt, BigDecimal paymentAmount, String paymentDate){
+    public BigDecimal calculateCurrentDebtBalance(Debt debt, BigDecimal paymentAmount, String paymentDate){
         ReadData readData = new ReadData();
         Reporting reporting = new Reporting();
-        BigDecimal previousBalance = debt.getDebtPayments().get(readData.getMostRecentDebtPaymentId(debt)).getCurrentBalance();
+        BigDecimal previousBalance;
+        if (debt.getDebtPayments().isEmpty()){
+            previousBalance = debt.getInitialAmount();
+        } else {
+            previousBalance = debt.getDebtPayments().get(readData.getMostRecentDebtPaymentId(debt)).getCurrentBalance();
+        }
         BigDecimal interestCharged = reporting.calculateInterestOwedUntoDate(debt, paymentDate);
 
         return previousBalance.add(interestCharged).subtract(paymentAmount);

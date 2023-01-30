@@ -31,6 +31,14 @@ public class Validate {
         }
         return LocalDate.parse(x).getDayOfMonth() == 1;
     };
+    public Predicate<String> integer = x -> {
+        try{
+            Integer.parseInt(x);
+        } catch (NumberFormatException nfe){
+            return false;
+        }
+        return true;
+    };
     public Predicate<String> currencyAmount = x -> x.matches("^\\d{1,8}\\.\\d{2}$");
     public Predicate<String> interest = x -> x.matches("^\\d{0,2}\\.\\d{1,4}$");
     public Predicate<String> digits = x -> x.matches("\\d{1,3}");

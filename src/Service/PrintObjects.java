@@ -2,6 +2,7 @@ package Service;
 
 import Model.*;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -39,18 +40,18 @@ public class PrintObjects {
 
     public Map<Integer, DebtPayment> printDebtPaymentsBetweenDates(Map<Integer, Debt> debts, Scanner scanner){
         int debtId;
-        Map<Integer, DebtPayment> debtPayments;
+        Map<Integer, DebtPayment> filteredItems = new HashMap<>();
         Validate validate = new Validate();
 
         if (!debts.isEmpty()){
             System.out.println("Please enter the ID of the debt which you want to view payments for, from the table below");
             printDebts(debts);
             debtId = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please only enter an ID from the table above", debts));
-            debtPayments = debts.get(debtId).getDebtPayments();
+            Map<Integer, DebtPayment> debtPayments = debts.get(debtId).getDebtPayments();
 
             String[] dates = getDatesFromUser(scanner);
 
-            Map<Integer, DebtPayment> filteredItems = debtPayments
+            filteredItems = debtPayments
                     .entrySet()
                     .stream()
                     .filter(entry -> entry.getValue().getDate().compareTo(dates[0]) > 0 & entry.getValue().getDate().compareTo(dates[1]) < 0)
@@ -61,7 +62,7 @@ public class PrintObjects {
         } else {
             System.out.println("You need to create a debt before you can have a debt payment");
         }
-        return null;
+        return filteredItems;
     }
 
     public Map<Integer, Debt> printDebtsBetweenDates(Map<Integer, Debt> items, Scanner scanner){

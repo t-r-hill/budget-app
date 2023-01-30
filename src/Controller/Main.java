@@ -60,6 +60,7 @@ public class Main {
                     break;
                 case "5":
                     // Reports menu
+                    reportingMenu(scanner, user);
                     break;
                 case "6":
                     exit = true;
@@ -253,8 +254,8 @@ public class Main {
             System.out.println(lineBreak);
             System.out.println("What report do you want to run?");
             System.out.println("1) Future Balance Estimate");
-            System.out.println("2) Expense");
-            System.out.println("3) Debt");
+            System.out.println("2) Predicted Debt Balances from current amount");
+            System.out.println("3) Scheduled Debt Balances from initial amount");
             System.out.println("4) Debt Payment");
             System.out.println("5) Return to main menu");
 
@@ -264,12 +265,17 @@ public class Main {
             switch (input) {
                 case "1":
                     // Print Future Balance
-                    reporting.getFutureBalance(scanner, user);
-                    break;
-                case "2":
-
+                    reporting.getFutureBalances(scanner, user);
                     break;
                 case "3":
+                    // Print scheduled debt balances
+
+                    reporting.getScheduledDebtBalancesFromInitialAmount(scanner, user);
+                    break;
+                case "2":
+                    // Print predicted debt balances
+
+                    reporting.getScheduledDebtBalancesFromCurrentAmount(scanner, user);
 
                     break;
                 case "4":

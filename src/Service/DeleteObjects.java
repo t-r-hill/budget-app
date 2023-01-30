@@ -77,7 +77,7 @@ public class DeleteObjects {
         if (!debts.isEmpty()){
             System.out.println("Please enter the ID of the transaction which you want to delete");
             id = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please enter an ID from the list above", debts));
-            if (!debts.get(id).getDebtPayments().isEmpty()){
+            if (debts.get(id).getDebtPayments().isEmpty()){
                 deleted = deleteData.deleteDebt(id);
 
                 if (deleted > 0){
@@ -114,7 +114,7 @@ public class DeleteObjects {
                 if (deleted > 0){
                     System.out.println("The debt has been deleted");
                     System.out.println(debtPayments.get(id));
-                    debtPayments.remove(id);
+                    user.getDebts().get(debtPayments.get(id).getDebtId()).getDebtPayments().remove(id);
                 } else{
                     System.out.println("There's been an error deleting the debt, please try again");
                 }

@@ -47,6 +47,9 @@ public class AccountSummary {
     }
 
     public BigDecimal cashToDebtRatio(User user){
+        if(totalDebt(user).compareTo(BigDecimal.ZERO) == 0){
+            return BigDecimal.ZERO;
+        }
         return accountBalance(user).divide(totalDebt(user), RoundingMode.HALF_EVEN);
     }
 
