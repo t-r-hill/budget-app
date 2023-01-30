@@ -109,10 +109,12 @@ public class DeleteObjects {
             if (!debtPayments.isEmpty()){
                 System.out.println("Please enter the ID of the debt payment which you want to delete a payment from");
                 id = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please enter an ID from the list above", debtPayments));
+                // Add check so only the most recent debt payment can be deleted
+
                 deleted = deleteData.deleteDebtPayment(id);
 
                 if (deleted > 0){
-                    System.out.println("The debt has been deleted");
+                    System.out.println("The debt payment has been deleted");
                     System.out.println(debtPayments.get(id));
                     user.getDebts().get(debtPayments.get(id).getDebtId()).getDebtPayments().remove(id);
                 } else{

@@ -256,7 +256,7 @@ public class Main {
             System.out.println("1) Future Balance Estimate");
             System.out.println("2) Predicted Debt Balances from current amount");
             System.out.println("3) Scheduled Debt Balances from initial amount");
-            System.out.println("4) Debt Payment");
+            System.out.println("4) Debt Statuses");
             System.out.println("5) Return to main menu");
 
             rule = "12345"::contains;
@@ -269,17 +269,15 @@ public class Main {
                     break;
                 case "3":
                     // Print scheduled debt balances
-
                     reporting.getScheduledDebtBalancesFromInitialAmount(scanner, user);
                     break;
                 case "2":
                     // Print predicted debt balances
-
                     reporting.getScheduledDebtBalancesFromCurrentAmount(scanner, user);
-
                     break;
                 case "4":
-
+                    // Print debt statuses
+                    reporting.printDebtStatuses(user);
                     break;
                 case "5":
                     // Exit loop and return to main menu

@@ -362,4 +362,40 @@ public class ReadSummaryData extends Database {
         }
         return total == null ? BigDecimal.ZERO : total;
     }
+
+    public BigDecimal totalDebtPaymentsUntoDateForDebt(int debtId, String date) {
+        connection = null;
+        preparedStatement = null;
+        resultSet = null;
+        BigDecimal total = BigDecimal.valueOf(0);
+
+        try {
+            connection = DriverManager.getConnection(connectionString);
+            preparedStatement = connection.prepareStatement("SELECT SUM(debt_payments.amount) " +
+                    "FROM debts JOIN debt_payments ON debts.id = debt_payments.debt_id " +
+                    "WHERE debts.id = ? " +
+                    "AND date <= ?;");
+            preparedStatement.setInt(1, debtId);
+            preparedStatement.setString(2, date);
+            resultSet = preparedStatement.executeQuery();
+            // Assign to POJO
+            while (resultSet.next()) {
+                total = resultSet.getBigDecimal(1);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("SQL exception occurred");
+            e.printStackTrace();
+        } finally {
+            try {
+                connection.close();
+                preparedStatement.close();
+                resultSet.close();
+            } catch (SQLException e) {
+                System.out.println("Exception occurred - couldn't close connection");
+                e.printStackTrace();
+            }
+        }
+        return total == null ? BigDecimal.ZERO : total;
+    }
 }

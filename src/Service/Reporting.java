@@ -148,12 +148,7 @@ public class Reporting {
         }
     }
 
-    public void scheduledVsPaidDebtPayments(){
-
-    }
-
     public BigDecimal calculateInterestOwedUntoDate(Debt debt, String date){
-        ReadData readData = new ReadData();
         BigDecimal balance;
         LocalDate balanceDate;
 
@@ -167,6 +162,53 @@ public class Reporting {
         }
 
         return calculateInterestBetweenDates(balance, debt.getInterestRate(), balanceDate, LocalDate.parse(date));
+    }
+
+    public String getDebtNextPaymentDate(Debt debt){
+        LocalDate today = LocalDate.now();
+        LocalDate nextPaymentDate;
+        LocalDate paymentDate = LocalDate.parse(debt.getPaymentDate());
+        DebtPayment mostRecentPayment = debt.getDebtPayments().get(readData.getMostRecentDebtPaymentId(debt));
+        if (today.getDayOfMonth() < paymentDate.getDayOfMonth()){
+            nextPaymentDate = paymentDate.withMonth(today.getMonthValue()).withYear(today.getYear());
+        } else {
+            nextPaymentDate = paymentDate.withMonth(today.getMonthValue() + 1).withYear(today.getYear());
+        }
+        return nextPaymentDate.toString();
+    }
+
+    public long getDebtNumScheduledPaymentsToDate(Debt debt, LocalDate toDate){
+        LocalDate paymentDate = LocalDate.parse(debt.getPaymentDate());
+        return paymentDate.until(toDate, ChronoUnit.MONTHS);
+    }
+
+    public BigDecimal getDebtScheduledPaymentAmountToDate(Debt debt, LocalDate toDate){
+        return debt.getPaymentAmount().multiply(BigDecimal.valueOf(getDebtNumScheduledPaymentsToDate(debt, toDate)));
+    }
+
+    public void printDebtStatuses(User user){
+        String leftAlignFormat = "| %-6d | %-23s | %-10s | %-17.2f | %-18.2f | %-17s |%n";
+        List<Integer> sortedDebtIds = new ArrayList<>(user.getDebts().keySet());
+        sortedDebtIds.sort(null);
+        Debt debt;
+        String status;
+        BigDecimal due;
+        BigDecimal paid;
+        String nextPaymentDate;
+        LocalDate today = LocalDate.now();
+
+        System.out.format("+--------+-------------------------+------------+-------------------+--------------------+-------------------+%n");
+        System.out.format("| ID     | Lender name             | Status     | Total Payment Due | Total Payment Made | Next Payment Date |%n");
+        System.out.format("+--------+-------------------------+------------+-------------------+--------------------+-------------------+%n");
+        for (Integer debtId : sortedDebtIds) {
+            debt = user.getDebts().get(debtId);
+            due = getDebtScheduledPaymentAmountToDate(debt, today);
+            paid = readSummaryData.totalDebtPaymentsUntoDateForDebt(debt.getId(), today.toString());
+            status = due.compareTo(paid) == 1 ? "In Arrears" : "Up To Date";
+            nextPaymentDate = getDebtNextPaymentDate(debt).toString();
+            System.out.format(leftAlignFormat, debtId, debt.getLenderName(), status, due, paid, nextPaymentDate);
+        }
+        System.out.format("+--------+-------------------------+------------+-------------------+--------------------+-------------------+%n");
     }
 
     BigDecimal calculateInterestBetweenDates(BigDecimal initialBalance, BigDecimal interestRate, LocalDate fromDate, LocalDate toDate){

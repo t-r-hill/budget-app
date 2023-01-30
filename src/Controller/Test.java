@@ -29,22 +29,14 @@ public class Test {
 //        if (user != null){
 //            printObjects.printExpenses(user);
 //        }
-        LocalDate date = LocalDate.parse("2023-01-01");
+        LocalDate date = LocalDate.parse("2021-12-29");
         BigDecimal balance = new BigDecimal("10000");
         BigDecimal monthlyPnL = new BigDecimal("542");
 
+        LocalDate today = LocalDate.parse("2022-02-28");
 
-        Map<LocalDate, BigDecimal> months = IntStream
-                .range(1, 10)
-                .collect(
-                        HashMap::new,
-                        (m, i) -> m.put(
-                                date.plusMonths(i),
-                                balance.subtract(monthlyPnL.multiply(BigDecimal.valueOf(i)))),
-                        Map::putAll
-                );
+        System.out.println(date.until(today, ChronoUnit.MONTHS));
 
-        System.out.println(months);
     }
 
     static public BigDecimal calculateInterestOwedUntoDate(Debt debt, String date){
