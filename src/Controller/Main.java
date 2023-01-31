@@ -84,8 +84,7 @@ public class Main {
         System.out.println("Do you want to login or create a new user? Please type \"login\" or \"new\" followed by return");
         System.out.println("Or type \"exit\" followed by return to exit the program");
 
-        rule = (String x) -> x.equalsIgnoreCase("login") | x.equalsIgnoreCase("new") | x.equalsIgnoreCase("exit");
-        input = validate.getAndValidateInput(scanner, rule, "Please enter only \"login\" or \"new\" followed by return");
+        input = validate.getAndValidateInput(scanner, validate.login, "Please enter only \"login\" or \"new\" followed by return");
 
         switch (input) {
             case "login":

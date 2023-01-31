@@ -168,7 +168,6 @@ public class Reporting {
         LocalDate today = LocalDate.now();
         LocalDate nextPaymentDate;
         LocalDate paymentDate = LocalDate.parse(debt.getPaymentDate());
-        DebtPayment mostRecentPayment = debt.getDebtPayments().get(readData.getMostRecentDebtPaymentId(debt));
         if (today.getDayOfMonth() < paymentDate.getDayOfMonth()){
             nextPaymentDate = paymentDate.withMonth(today.getMonthValue()).withYear(today.getYear());
         } else {
@@ -179,7 +178,13 @@ public class Reporting {
 
     public long getDebtNumScheduledPaymentsToDate(Debt debt, LocalDate toDate){
         LocalDate paymentDate = LocalDate.parse(debt.getPaymentDate());
-        return paymentDate.until(toDate, ChronoUnit.MONTHS);
+        long months;
+        if (toDate.compareTo(paymentDate) == -1){
+            months = 0L;
+        } else {
+            months = paymentDate.until(toDate, ChronoUnit.MONTHS) + 1;
+        }
+        return months;
     }
 
     public BigDecimal getDebtScheduledPaymentAmountToDate(Debt debt, LocalDate toDate){

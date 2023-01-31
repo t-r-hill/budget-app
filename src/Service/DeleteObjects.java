@@ -1,6 +1,7 @@
 package Service;
 
 import Data.DeleteData;
+import Data.ReadData;
 import Model.*;
 
 import java.util.Map;
@@ -101,29 +102,29 @@ public class DeleteObjects {
         Validate validate = new Validate();
         DeleteData deleteData = new DeleteData();
         PrintObjects printObjects = new PrintObjects();
-        int id;
+        ReadData readData = new ReadData();
         int deleted;
+        String delete;
         if (!user.getDebts().isEmpty()){
             System.out.println("Let's find the transaction which you wish to delete");
             debtPayments = printObjects.printDebtPaymentsBetweenDates(user.getDebts(), scanner);
             if (!debtPayments.isEmpty()){
-                System.out.println("Please enter the ID of the debt payment which you want to delete a payment from");
-                id = Integer.parseInt(validate.getAndValidateInput(scanner, validate.validId, "Please enter an ID from the list above", debtPayments));
-                // Add check so only the most recent debt payment can be deleted
-
-                deleted = deleteData.deleteDebtPayment(id);
-
-                if (deleted > 0){
-                    System.out.println("The debt payment has been deleted");
-                    System.out.println(debtPayments.get(id));
-                    user.getDebts().get(debtPayments.get(id).getDebtId()).getDebtPayments().remove(id);
-                } else{
-                    System.out.println("There's been an error deleting the debt, please try again");
+                Integer mostRecentDebtPaymentID = readData.getMostRecentDebtPaymentId(user.getDebts().get(debtPayments.entrySet().iterator().next().getValue().getDebtId()));
+                System.out.println("You may only delete the most recent debt payment. Do you want to delete the debt payment with id = " + mostRecentDebtPaymentID + " ?");
+                delete = validate.getAndValidateInput(scanner, validate.yesOrNo, "Please enter 'yes' or 'no'");
+                if (delete.equals("yes")){
+                    deleted = deleteData.deleteDebtPayment(mostRecentDebtPaymentID);
+                    if (deleted > 0){
+                        System.out.println("The debt payment has been deleted");
+                        System.out.println(debtPayments.get(mostRecentDebtPaymentID));
+                        user.getDebts().get(debtPayments.get(mostRecentDebtPaymentID).getDebtId()).getDebtPayments().remove(mostRecentDebtPaymentID);
+                    } else{
+                        System.out.println("There's been an error deleting the debt, please try again");
+                    }
                 }
             } else {
                 System.out.println("There are no debt payments related to this debt during this time period");
             }
-
         } else{
             System.out.println("You have no debts or debt payments to delete");
         }

@@ -1,8 +1,6 @@
 package Service;
 
-import Model.Debt;
 import Model.Transaction;
-import Model.User;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -44,9 +42,11 @@ public class Validate {
     public Predicate<String> digits = x -> x.matches("\\d{1,3}");
     public Predicate<String> stringLength45 = x -> x.length() < 45;
     public Predicate<String> stringLength200 = x -> x.length() < 200;
-    public Predicate<String> frequency = x -> x.equals("one-off") | x.equals("weekly") | x.equals("monthly");
+    public Predicate<String> frequency = x -> x.equalsIgnoreCase("one-off") | x.equalsIgnoreCase("weekly") | x.equalsIgnoreCase("monthly");
     public Predicate<String> oneWord = x -> !x.contains(" ");
     public Predicate<String> emailAddress = x -> x.matches("^(.+)@(.+)$");
+    public Predicate<String> yesOrNo = x -> x.equalsIgnoreCase("yes") | x.equalsIgnoreCase("No");
+    public Predicate<String> login = x -> x.equalsIgnoreCase("login") | x.equalsIgnoreCase("new") | x.equalsIgnoreCase("exit");
     public BiPredicate<String, Map<Integer, ? extends Transaction>> validId = (input, items) -> {
         if (input == null) {
             return false;
